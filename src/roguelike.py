@@ -3087,7 +3087,7 @@ def main_menu():
         libtcod.console_set_default_foreground(0, libtcod.light_yellow)
         libtcod.console_print_ex(0, SCREEN_WIDTH/2, SCREEN_HEIGHT/2-4, libtcod.BKGND_NONE, libtcod.CENTER,
                                  'TOMBS OF THE ANCIENT KINGS')
-        libtcod.console_print_ex(0, SCREEN_WIDTH/2, SCREEN_HEIGHT-2, libtcod.BKGND_NONE, libtcod.CENTER, 'By Jotaf')
+        libtcod.console_print_ex(0, SCREEN_WIDTH/2, SCREEN_HEIGHT-2, libtcod.BKGND_NONE, libtcod.CENTER, 'Revised by Yuggar')
 
         #show options and wait for the player's choice
         choice = menu('', ['Play a new game', 'Continue last game', 'Quit'], 24)
