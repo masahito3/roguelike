@@ -357,6 +357,7 @@ class Fighter(object):
         self.haste = False #a monster is in haste or not
         self.slow = False #a monster is slow or not
         self.cancel = False #a monster is forbidden to use special abilities or not
+        self.canhuh = False #the player can confuse a monster
 
     @property
     def st(self):
@@ -386,8 +387,8 @@ class Fighter(object):
     def attack_by_throwing(self,target,weapon,projectile):
         getattr(self.actions,'attack_by_throwing',noop)(self.owner,target,weapon,projectile)
 
-    def throw(self,projectile,x,y):
-        getattr(self.actions,'throw',noop)(self.owner,projectile,x,y)
+    def throw(self,projectile,dx,dy):
+        getattr(self.actions,'throw',noop)(self.owner,projectile,dx,dy)
 
     def use_calories(self):
         getattr(self.actions,'use_calories',noop)(self.owner)
@@ -421,6 +422,16 @@ class PlayerActions: # Player Fighter's actions
             return
         damage = max(0,roll(get_dmg(weapon)) + get_dmg_plus(weapon))
         message('You attack ' + monster.name + ' for ' + str(damage) + ' hit points.')
+        if player.fighter.canhuh:
+            player.fighter.canhuh = False
+            #replace the monster's AI with a "confused" one; 
+            #after some turns it will restore the old AI
+            old_ai = monster.ai
+            monster.ai = ConfusedMonster(0.8,old_ai)
+            monster.ai.owner = monster  #tell the new component who owns it
+            message('Your hands stop glowing red.',color_scroll)
+            message('The eyes of the ' + monster.name + 
+                    ' look vacant, as he starts to stumble around!',color_scroll)
         monster.fighter.take_damage(damage,player)
 
     @staticmethod
@@ -462,23 +473,22 @@ class PlayerActions: # Player Fighter's actions
         hit = random.randint(1,20) + get_throwing_hit_plus(weapon,projectile)
         need = (21 - player.fighter.lvl) - monster.fighter.ac
         if hit < need:
-            message('The '+display_name(projectile.owner.name)+' misses '+monster.name)
+            message('The '+display_name(projectile.owner)+' misses '+monster.name)
             return
         damage = max(0,roll(get_throwing_dmg(weapon,projectile)) + 
                         get_throwing_dmg_plus(weapon,projectile))
-        message('The '+display_name(projectile.owner.name) + ' hits ' + monster.name + 
+        message('The '+display_name(projectile.owner) + ' hits ' + monster.name + 
                 ' for ' + str(damage) + ' hit points.')
         monster.fighter.take_damage(damage,player)
 
     @staticmethod
-    def throw(player,projectile,x,y): # the player throws a weapon
+    def throw(player,projectile,dx,dy): # the player throws a weapon
         global peace
         peace = False
-        # throw it
         if projectile.is_equipped and not projectile.dequip():
             return
-        projectile.owner.x = x
-        projectile.owner.y = y
+        #move the projectile to the direction of dx,dy
+        x,y = projectile_motion(projectile,dx,dy)
         objects.append(projectile.owner)
         inventory.remove(projectile.owner)
         projectile.owner.send_to_back()
@@ -486,6 +496,8 @@ class PlayerActions: # Player Fighter's actions
         if monster == None:
             message('You threw away a ' + display_name(projectile.owner) + '.')
             return
+        projectile.owner.x = x
+        projectile.owner.y = y
         PlayerActions.attack_by_throwing(player,monster,get_current_weapon(),projectile)
 
     @staticmethod
@@ -1403,17 +1415,8 @@ class Eat:
 
 def use_scroll_confuse():
     #ask the player for a target to confuse
-    message('Left-click an enemy to confuse. or right-click to cancel', color_scroll)
-    monster = target_monster(CONFUSE_RANGE)
-    if not monster:
-        return 'canceled'
-    #replace the monster's AI with a "confused" one; 
-    #after some turns it will restore the old AI
-    old_ai = monster.ai
-    monster.ai = ConfusedMonster(0.8,old_ai)
-    monster.ai.owner = monster  #tell the new component who owns it
-    message('The eyes of the ' + monster.name + 
-            ' look vacant, as he starts to stumble around!', color_scroll)
+    message('Your hands begin to glow red.', color_scroll)
+    player.fighter.canhuh = True
 
 def use_scroll_map():
     global fov_recompute
@@ -2620,11 +2623,9 @@ def handle_keys():
     if key_char == 't':
         weapon = weapon_menu()
         if weapon is not None:
-            message('Left-click a target tile to throw, or right-click to cancel.', 
-                    libtcod.light_cyan)
-            (x,y) = target_tile()
-            if x is not None:
-                player.fighter.throw(weapon,x,y)
+            (dx,dy) = target_direction()
+            if dx is not None:
+                player.fighter.throw(weapon,dx,dy)
                 return
         return 'didnt-take-turn'
 
@@ -2699,6 +2700,43 @@ def target_tile(max_range=None):
                 continue
             return (x, y)
 
+def target_direction():
+    #return the target direction or (None,None) if cancelled.
+    global key,mouse
+    message('Which direction? or ESC to cancel.')
+    while True:
+        #get the key pressed
+        libtcod.console_flush()
+        libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
+        #render the screen to erase the inventory menu and 
+        #shows the name of the object under the mouse.
+        render_all()
+        if key.vk in delta_xy_dict:
+            dx,dy = delta_xy_dict.get(key.vk)
+            if (dx,dy) == (0,0):
+                continue
+            return (dx, dy)
+        elif key.vk == libtcod.KEY_ESCAPE:
+            message("Canceled")
+            return (None, None)
+
+def projectile_motion(projectile,dx,dy):
+    projectile.owner.x = player.x
+    projectile.owner.y = player.y
+    #move the projectile and show the animation
+    while True:
+        x = projectile.owner.x + dx
+        y = projectile.owner.y + dy
+        if is_blocked(x,y):
+            return (x,y)
+        projectile.owner.clear()
+        projectile.owner.x = x
+        projectile.owner.y = y
+        projectile.owner.draw()
+        render_all()
+        libtcod.console_flush()
+        time.sleep(0.01)
+
 def target_monster(max_range=None,mimic=False):
     #returns a clicked monster inside FOV up to a range, or None if right-clicked
     while True:
@@ -2713,7 +2751,7 @@ def target_monster(max_range=None,mimic=False):
             message('There is no monster.')
 
 def monster_at(x,y):
-    return next((o for o in objects if o.x==x and o.y==y and o.fighter and o != player),None)
+    return next((o for o in objects if o.x==x and o.y==y and (o.ch >= 'A' and o.ch <= 'Z')),None)
 
 def closest_monster(max_range):
     #find closest enemy, up to a maximum range, and in the player's FOV
@@ -2880,6 +2918,11 @@ def new_game():
     #    obj = generate_potion('paralysis')
     #    inventory.append(obj)
     #    obj.always_visible = True
+
+    #test scroll
+    #obj = generate_scroll('monster confusion')
+    #inventory.append(obj)
+    #obj.always_visible = True
 
     #test ring
     #obj = generate_ring('sustain strength')
