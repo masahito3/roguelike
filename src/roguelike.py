@@ -488,7 +488,7 @@ class PlayerActions: # Player Fighter's actions
         if projectile.is_equipped and not projectile.dequip():
             return
         #move the projectile to the direction of dx,dy
-        x,y = projectile_motion(projectile,dx,dy)
+        x,y = projectile_motion(projectile.owner,dx,dy)
         objects.append(projectile.owner)
         inventory.remove(projectile.owner)
         projectile.owner.send_to_back()
@@ -1677,11 +1677,16 @@ def use_stick_light():
     message('The room is lit by a shimmering blue light.', color_stick)
 
 def use_stick_striking():
-    #ask the player for a target
-    message('Left-click an enemy to hit. or right-click to cancel', color_stick)
-    monster = target_monster(1)
-    if not monster: 
+    message('Which direction? or ESC to cancel.',color_stick)
+    dx,dy = target_direction()
+    if dx is None:
+        message("Canceled",color_stick)
         return 'canceled'
+    x,y = player.x+dx,player.y+dy
+    monster = monster_at(x,y)
+    if not monster:
+        message("Missed swing",color_stick)
+        return
     if random.randint(1,20)==1:
         dmg,dplus = '3D8',9
     else:
@@ -1691,21 +1696,26 @@ def use_stick_striking():
     player.fighter.attack_by_slashing(monster,weapon)
 
 def use_stick_hit(name):
-    message('Left-click an enemy to hit. or right-click to cancel', color_stick)
-    monster = target_monster(6,True)
-    if not monster: 
+    message('Which direction? or ESC to cancel.',color_stick)
+    dx,dy = target_direction()
+    if dx is None:
+        message("Canceled",color_stick)
         return 'canceled'
-
-    if monster.ch <'A' or monster.ch > 'Z':
-        message('The '+name+' whizzes past the mimic.')
+    projectile=Equipment(hurl_dmg='6D6',launch_dmg='6D6',dmg_plus=100)
+    obj = Object(0,0,'/',name,color_stick,item=Item(),equipment=projectile)
+    x,y = projectile_motion(obj,dx,dy)
+    obj.clear()
+    monster = monster_at(x,y)
+    if not monster:
+        message("You missed the target.",color_stick)
+        return
+    if mimic_check(monster):
+        message('The '+name+' whizzes past the mimic.',color_stick)
         monster.active = True
         return
-
     if roll('1D20') > 17 - monster.fighter.lvl / 2:
         message('The '+ name +' whizzes past the '+monster.name+'.', color_stick)
         return
-    projectile=Equipment(hurl_dmg='6D6',launch_dmg='6D6',dmg_plus=100)
-    Object(0,0,'',name,libtcod.white,item=Item(),equipment=projectile)
     player.fighter.attack_by_throwing(monster,None,projectile)
 
 def use_stick_lightning():
@@ -1718,10 +1728,18 @@ def use_stick_cold():
     return use_stick_hit('ice')
 
 def use_stick_polymorph():
-    message('Left-click an enemy to polymorph. or right-click to cancel', color_stick)
-    monster = target_monster(6)
-    if not monster: 
+    message('Which direction? or ESC to cancel.',color_stick)
+    dx,dy = target_direction()
+    if dx is None:
+        message("Canceled",color_stick)
         return 'canceled'
+    obj = Object(0,0,'/','',color_stick)
+    x,y = projectile_motion(obj,dx,dy)
+    obj.clear()
+    monster = monster_at(x,y)
+    if not monster:
+        message("You missed the target.",color_stick)
+        return
     new_monster = generate_monster(random_select_monster(),*xy(monster))
     new_monster.active = True
     message(monster.name + ' is polymorphed to '+new_monster.name, color_stick)
@@ -1730,32 +1748,55 @@ def use_stick_polymorph():
     objects.remove(monster)
 
 def use_stick_magic_missile():
-    message('Left-click an enemy to shoot. or right-click to cancel', color_stick)
-    monster = target_monster(6)
-    if not monster: 
+    message('Which direction? or ESC to cancel.',color_stick)
+    dx,dy = target_direction()
+    if dx is None:
+        message("Canceled",color_stick)
         return 'canceled'
+    projectile = Equipment(hurl_dmg='1D4',launch_dmg='1D4',dmg_plus=100)
+    obj = Object(0,0,'*','missile',color_stick,item=Item(),equipment=projectile)
+    x,y = projectile_motion(obj,dx,dy)
+    obj.clear()
+    monster = monster_at(x,y)
+    if not monster:
+        message("You missed the target.",color_stick)
+        return
     if roll('1D20') > 17 - monster.fighter.lvl / 2:
         message('The missile vanishes with a puff of smoke.',color_stick)
         return
-    projectile=Equipment(hurl_dmg='1D4',launch_dmg='1D4',dmg_plus=100)
-    Object(0,0,'','missile',libtcod.white,item=Item(),equipment=projectile)
     player.fighter.attack_by_throwing(monster,None,projectile)
 
 def use_stick_haste_monster():
-    message('Left-click an enemy to make haste. or right-click to cancel', color_stick)
-    monster = target_monster(6)
-    if not monster: 
+    message('Which direction? or ESC to cancel.',color_stick)
+    dx,dy = target_direction()
+    if dx is None:
+        message("Canceled",color_stick)
         return 'canceled'
+    obj = Object(0,0,'/','',color_stick)
+    x,y = projectile_motion(obj,dx,dy)
+    obj.clear()
+    monster = monster_at(x,y)
+    if not monster:
+        message("You missed the target.",color_stick)
+        return
     monster.fighter.slow = False
     monster.fighter.haste = True
     monster.active = True
     message(monster.name + ' is made haste.', color_stick)
 
 def use_stick_slow_monster():
-    message('Left-click an enemy to make slow. or right-click to cancel', color_stick)
-    monster = target_monster(6)
-    if not monster: 
+    message('Which direction? or ESC to cancel.',color_stick)
+    dx,dy = target_direction()
+    if dx is None:
+        message("Canceled",color_stick)
         return 'canceled'
+    obj = Object(0,0,'/','',color_stick)
+    x,y = projectile_motion(obj,dx,dy)
+    obj.clear()
+    monster = monster_at(x,y)
+    if not monster:
+        message("You missed the target.",color_stick)
+        return
     monster.fighter.slow = True
     monster.fighter.haste = False
     monster.active = True
@@ -1780,10 +1821,18 @@ def use_stick_nothing():
     message('Nothing happens.', color_stick)
 
 def use_stick_teleport_away():
-    message('Left-click an enemy to teleport away. or right-click to cancel', color_stick)
-    monster = target_monster(6)
-    if not monster: 
+    message('Which direction? or ESC to cancel.',color_stick)
+    dx,dy = target_direction()
+    if dx is None:
+        message("Canceled",color_stick)
         return 'canceled'
+    obj = Object(0,0,'/','',color_stick)
+    x,y = projectile_motion(obj,dx,dy)
+    obj.clear()
+    monster = monster_at(x,y)
+    if not monster:
+        message("You missed the target.",color_stick)
+        return
     monster.active = True
     while True:
         x,y = get_random_pos(random.choice(not_gone_rooms))
@@ -1794,10 +1843,18 @@ def use_stick_teleport_away():
     message(monster.name + ' is teleported away.', color_stick)
 
 def use_stick_teleport_to():
-    message('Left-click an enemy to teleport to. or right-click to cancel', color_stick)
-    monster = target_monster(6)
-    if not monster: 
+    message('Which direction? or ESC to cancel.',color_stick)
+    dx,dy = target_direction()
+    if dx is None:
+        message("Canceled",color_stick)
         return 'canceled'
+    obj = Object(0,0,'/','',color_stick)
+    x,y = projectile_motion(obj,dx,dy)
+    obj.clear()
+    monster = monster_at(x,y)
+    if not monster:
+        message("You missed the target.",color_stick)
+        return
     x,y = next(((x,y) for (x,y) in neighborhood(*xy(player)) if not is_blocked_monsters(x,y)),(None,None))
     if not x:
         message(monster.name + ' couldn\'t get close to you.', color_stick)
@@ -1808,10 +1865,18 @@ def use_stick_teleport_to():
     message(monster.name + ' gets next to you.', color_stick)
 
 def use_stick_cancellation():
-    message('Left-click an enemy to cancel. or right-click to cancel', color_stick)
-    monster = target_monster(6)
-    if not monster: 
+    message('Which direction? or ESC to cancel.',color_stick)
+    dx,dy = target_direction()
+    if dx is None:
+        message("Canceled",color_stick)
         return 'canceled'
+    obj = Object(0,0,'/','',color_stick)
+    x,y = projectile_motion(obj,dx,dy)
+    obj.clear()
+    monster = monster_at(x,y)
+    if not monster:
+        message("You missed the target.",color_stick)
+        return
     monster.fighter.cancel = True
     message(monster.name + ' losts its special abilities.', color_stick)
 
@@ -2623,10 +2688,12 @@ def handle_keys():
     if key_char == 't':
         weapon = weapon_menu()
         if weapon is not None:
-            (dx,dy) = target_direction()
+            message('Which direction? or ESC to cancel.')
+            dx,dy = target_direction()
             if dx is not None:
                 player.fighter.throw(weapon,dx,dy)
                 return
+        message("Canceled")
         return 'didnt-take-turn'
 
     if key_char == 's':
@@ -2672,83 +2739,40 @@ def check_level_up():
         player.fighter.lvl = new_lvl
         message('Your battle skills grow stronger! You reached level ' + str(player.fighter.lvl) + '!', libtcod.yellow)
         
-def target_tile(max_range=None):
-    global key, mouse
-    #return the position of a tile left-clicked in player's FOV (optionally in a range), 
-    #or (None,None) if right-clicked.
-    while True:
-        #render the screen. this erases the inventory and 
-        #shows the names of objects under the mouse.
-        libtcod.console_flush()
-        libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
-        render_all()
-
-        (x, y) = (mouse.cx, mouse.cy)
-
-        if mouse.rbutton_pressed or key.vk == libtcod.KEY_ESCAPE:
-            message("Canceled")
-            return (None, None)  #cancel if the player right-clicked or pressed Escape
-
-        #accept the target if the player clicked in FOV,
-        #and in case a range is specified, if it's in that range
-        if mouse.lbutton_pressed:
-            if not map_is_in_fov(x, y):
-                message("It's not in the fov.")
-                continue
-            if max_range and player.distance(x, y) > max_range:
-                message('You clicked out of range (range='+str(max_range)+').')
-                continue
-            return (x, y)
-
 def target_direction():
     #return the target direction or (None,None) if cancelled.
     global key,mouse
-    message('Which direction? or ESC to cancel.')
     while True:
         #get the key pressed
         libtcod.console_flush()
         libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
         #render the screen to erase the inventory menu and 
-        #shows the name of the object under the mouse.
+        #to show the name of the object under the mouse.
         render_all()
         if key.vk in delta_xy_dict:
             dx,dy = delta_xy_dict.get(key.vk)
             if (dx,dy) == (0,0):
                 continue
-            return (dx, dy)
+            return dx, dy
         elif key.vk == libtcod.KEY_ESCAPE:
-            message("Canceled")
             return (None, None)
 
-def projectile_motion(projectile,dx,dy):
-    projectile.owner.x = player.x
-    projectile.owner.y = player.y
+def projectile_motion(obj,dx,dy):
+    obj.x = player.x
+    obj.y = player.y
     #move the projectile and show the animation
     while True:
-        x = projectile.owner.x + dx
-        y = projectile.owner.y + dy
+        x = obj.x + dx
+        y = obj.y + dy
         if is_blocked(x,y):
             return (x,y)
-        projectile.owner.clear()
-        projectile.owner.x = x
-        projectile.owner.y = y
-        projectile.owner.draw()
+        obj.clear()
+        obj.x = x
+        obj.y = y
+        obj.draw()
         render_all()
         libtcod.console_flush()
         time.sleep(0.01)
-
-def target_monster(max_range=None,mimic=False):
-    #returns a clicked monster inside FOV up to a range, or None if right-clicked
-    while True:
-        (x, y) = target_tile(max_range)
-        if x is None:  #player canceled
-            return None
-        #return the first clicked monster, otherwise continue looping
-        for obj in objects:
-            if obj.x == x and obj.y == y and ((obj.ch >= 'A' and obj.ch <= 'Z') or (mimic and obj.type=='monster')):
-                return obj
-        else:
-            message('There is no monster.')
 
 def monster_at(x,y):
     return next((o for o in objects if o.x==x and o.y==y and (o.ch >= 'A' and o.ch <= 'Z')),None)
@@ -2931,7 +2955,8 @@ def new_game():
     #obj.always_visible = True
 
     #test stick
-    #obj = generate_stick('lightning')
+    ##obj = generate_stick('lightning')
+    #obj = generate_stick('striking')
     #inventory.append(obj)
     #obj.always_visible = True
 
