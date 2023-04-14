@@ -2821,7 +2821,6 @@ def save_game(fname='savegame'):
     file['potion_dict'] = potion_dict
     file['ring_dict'] = ring_dict
     file['stick_dict'] = stick_dict
-    file['magic_item_dict'] = magic_item_dict
     file['purse'] = purse
     file['fungi_hit'] = fungi_hit
     file['user_name'] = user_name
@@ -2854,7 +2853,13 @@ def load_game(fname='savegame'):
     potion_dict = file['potion_dict']
     ring_dict = file['ring_dict']
     stick_dict = file['stick_dict']
-    magic_item_dict = file['magic_item_dict']
+    #saving and loading the dictionary change the reference items to the copy items
+    #then it has to be recreate for being reference
+    magic_item_dict = {
+        'scroll':scroll_dict,
+        'potion':potion_dict,
+        'stick':stick_dict,
+        'ring':ring_dict}
     purse = file['purse']
     fungi_hit = file['fungi_hit']
     user_name = file['user_name']
