@@ -76,7 +76,6 @@ color_trap = hsv(0,0,1)
 color_amulet = hsv(0,0,1)
 
 def get_user_name():
-    #return 'Anonimous'#test
     for v in ('username','user','USERNAME','USER'):
         name = os.getenv(v)
         if name:
@@ -1109,18 +1108,19 @@ def make_map():
     for r in rooms:
         create_room(r)
         if random.randint(1,10) < dungeon_level:
-        #if 1:#test
             dark_room(r)
 
     #set traps
     if random.randint(0,9) < dungeon_level:
-    #if 1:#test
         max_traps = min(10,random.randint(0,dungeon_level/4)+1)
-        #max_traps = 20#test
         #distribute the traps into the rooms
         i = 0
         while (i < max_traps):
             i += place_object(random.choice(not_gone_rooms),'trap')
+
+    #test for trap
+    #for _ in range(20):
+    #    place_object(random.choice(not_gone_rooms),'trap')
 
     #you don't have an amulet or you have reached to the deeper ever
     if not have_amulet() or dungeon_level > max_dungeon_level: 
@@ -1217,9 +1217,7 @@ def make_map():
     for rm in not_gone_rooms:
         for x,y in get_doors(rm):
             if random.randint(1,10) < dungeon_level and random.randint(1,5) == 1:
-            #if 1:#test
                 secret_door = Object(x, y, ' ', 'secret door', libtcod.white, blocks=1)
-                #secret_door = Object(x, y, '+', 'secret door', libtcod.red, blocks=1)#test
                 objects.append(secret_door)
                 map[x][y].blocked = True
                 map[x][y].block_sight = True
@@ -2596,13 +2594,6 @@ def handle_keys():
     if game_state != 'playing':
         return
 
-    #movement keys
-    if key.vk in delta_xy_dict:
-        delta_xy = delta_xy_dict.get(key.vk)
-        if delta_xy != (0,0): # (0,0) means waiting for the monsters
-            player_move_or_attack(*delta_xy)
-        return
-
     #test for other keys
     #debuged
     #(memo)With Japanese keyboards, '<' is assigned to SHIFT+',' then it can't be get at KEY_CHAR event
@@ -2613,6 +2604,17 @@ def handle_keys():
     else:
         key_char = 0
 
+    if no_command != None and key_char != 'i':
+        return
+
+    #handle movement keys
+    if key.vk in delta_xy_dict:
+        delta_xy = delta_xy_dict.get(key.vk)
+        if delta_xy != (0,0): # (0,0) means waiting for the monsters
+            player_move_or_attack(*delta_xy)
+        return
+
+    #handle command keys
     if key_char == 'g':
         #pick up an item or gold
         for object in objects:  #look for an item in the player's tile
@@ -2698,6 +2700,16 @@ def handle_keys():
 
     if key_char == 's':
         search()
+        return 'didnt-take-turn'
+
+    #test save
+    if key_char == 'S':
+        save_game('test_save_game')
+        return 'didnt-take-turn'
+
+    #test load
+    if key_char == 'L':
+        load_game('test_save_game')
         return 'didnt-take-turn'
 
     # any key is not pressed
@@ -2791,9 +2803,9 @@ def closest_monster(max_range):
                 closest_dist = dist
     return closest_enemy
 
-def save_game():
+def save_game(fname='savegame'):
     #open a new empty shelve (possibly overwriting an old one) to write the game data
-    file = shelve.open('savegame', 'n')
+    file = shelve.open(fname, 'n')
     file['map'] = map
     file['objects'] = objects
     file['player_index'] = objects.index(player)  #index of player in objects list
@@ -2809,6 +2821,7 @@ def save_game():
     file['potion_dict'] = potion_dict
     file['ring_dict'] = ring_dict
     file['stick_dict'] = stick_dict
+    file['magic_item_dict'] = magic_item_dict
     file['purse'] = purse
     file['fungi_hit'] = fungi_hit
     file['user_name'] = user_name
@@ -2816,15 +2829,15 @@ def save_game():
     file['end_date'] = end_date
     file.close()
 
-def load_game():
+def load_game(fname='savegame'):
     #open the previously saved shelve and load the game data
     global map, objects, player, stairs, inventory, game_msgs, game_state
     global dungeon_level, max_dungeon_level
     global rooms,not_gone_rooms,wandering_monster_generator
-    global scroll_dict,potion_dict,ring_dict,stick_dict,purse,fungi_hit
+    global scroll_dict,potion_dict,ring_dict,stick_dict,magic_item_dict,purse,fungi_hit
     global user_name,killer_monster_name,end_date
 
-    file = shelve.open('savegame', 'r')
+    file = shelve.open(fname, 'r')
 
     map = file['map']
     objects = file['objects']
@@ -2841,6 +2854,7 @@ def load_game():
     potion_dict = file['potion_dict']
     ring_dict = file['ring_dict']
     stick_dict = file['stick_dict']
+    magic_item_dict = file['magic_item_dict']
     purse = file['purse']
     fungi_hit = file['fungi_hit']
     user_name = file['user_name']
@@ -2949,9 +2963,13 @@ def new_game():
     #obj.always_visible = True
 
     #test ring
-    #obj = generate_ring('sustain strength')
+    ##ring_name = 'sustain strength'
+    #ring_name = 'searching'
+    ##ring_name = 'regeneration'
+    ##ring_name = 'slow digestion'
+    #obj = generate_ring(ring_name)
     #inventory.append(obj)
-    #obj.equipment.equip()
+    ###obj.equipment.equip()
     #obj.always_visible = True
 
     #test stick
@@ -3078,11 +3096,10 @@ def play_game():
 
         peace = True
 
+        player.clear() #clear player before move
+        player_action = handle_keys() #handle keys
         if no_command != None:
             player_action = next(no_command)
-        else:
-            player.clear() #clear player before move
-            player_action = handle_keys() #handle keys
 
         #exit game if needed
         if player_action == 'exit':
