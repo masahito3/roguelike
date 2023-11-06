@@ -1130,7 +1130,6 @@ def make_map():
 
         #maximum number of items at the level
         max_items = weighted_random_choice(range(len(binom_pmf)),binom_pmf)
-
         #max_items=20#test max_items
 
         #distribute the items into the rooms
@@ -2580,7 +2579,16 @@ libtcod.KEY_KP1:(-1,1),
 libtcod.KEY_PAGEDOWN:(1,1),
 libtcod.KEY_KP3:(1,1),
 libtcod.KEY_SPACE:(0,0),
-libtcod.KEY_KP5:(0,0)}
+libtcod.KEY_KP5:(0,0),
+'y':(-1,-1),
+'k':(0,-1),
+'u':(1,-1),
+'h':(-1,0),
+'l':(1,0),
+'b':(-1,1),
+'j':(0,1),
+'n':(1,1)
+}
 
 def handle_keys():
     global key
@@ -2608,8 +2616,8 @@ def handle_keys():
         return
 
     #handle movement keys
-    if key.vk in delta_xy_dict:
-        delta_xy = delta_xy_dict.get(key.vk)
+    delta_xy = delta_xy_dict.get(key.vk,None) or delta_xy_dict.get(key_char,None)
+    if delta_xy:
         if delta_xy != (0,0): # (0,0) means waiting for the monsters
             player_move_or_attack(*delta_xy)
         return
@@ -2761,11 +2769,14 @@ def target_direction():
         #render the screen to erase the inventory menu and 
         #to show the name of the object under the mouse.
         render_all()
-        if key.vk in delta_xy_dict:
-            dx,dy = delta_xy_dict.get(key.vk)
-            if (dx,dy) == (0,0):
+
+        key_char = (key.vk==libtcod.KEY_TEXT and key.text[0]) or 0
+        delta_xy = delta_xy_dict.get(key.vk,None) or delta_xy_dict.get(key_char,None)
+
+        if delta_xy:
+            if delta_xy == (0,0):
                 continue
-            return dx, dy
+            return delta_xy
         elif key.vk == libtcod.KEY_ESCAPE:
             return (None, None)
 
@@ -2853,8 +2864,9 @@ def load_game(fname='savegame'):
     potion_dict = file['potion_dict']
     ring_dict = file['ring_dict']
     stick_dict = file['stick_dict']
-    #saving and loading the dictionary change the reference items to the copy items
-    #then it has to be recreate for being reference
+    #As a feature of the shelve module, file['magic_item_dict'] returns the copy of the magic_item_dict.
+    #Maybe it's a deep copy. I need the items in the magic_item_dict to be a reference to the scroll_dict, ...
+    #Then the magic_item_dict have to be recreated not to be saved and loaded using the shelve.
     magic_item_dict = {
         'scroll':scroll_dict,
         'potion':potion_dict,
@@ -2974,7 +2986,7 @@ def new_game():
     ##ring_name = 'slow digestion'
     #obj = generate_ring(ring_name)
     #inventory.append(obj)
-    ###obj.equipment.equip()
+    ##obj.equipment.equip()
     #obj.always_visible = True
 
     #test stick
