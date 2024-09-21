@@ -175,7 +175,8 @@ class Score:
 
 def save_score(reason=None):
     file = shelve.open('score', 'c')
-    top_ten = file.has_key('top_ten') and file['top_ten'] or []
+    #top_ten = file.has_key('top_ten') and file['top_ten'] or []
+    top_ten = 'top_ten' in file and file['top_ten'] or []
     level = reason == 'A total winner' and max_dungeon_level or dungeon_level
     top_ten.append(Score(purse,user_name,level,reason,end_date.strftime('%Y-%m-%d %H:%M')))
     top_ten.sort(key=lambda s:s.score,reverse=True)
@@ -1079,8 +1080,8 @@ def make_map():
 
     rooms = []
 
-    map_width_one_third = MAP_WIDTH/3
-    map_height_one_third = MAP_HEIGHT/3
+    map_width_one_third = int(MAP_WIDTH/3)
+    map_height_one_third = int(MAP_HEIGHT/3)
 
     room_max_size_x = map_width_one_third - 2 # shorten to prevent rooms from touching each other
     room_max_size_y = map_height_one_third - 2 # shorten to prevent rooms from touching each other
@@ -1089,11 +1090,11 @@ def make_map():
     room_ids = range(9)
     for i in room_ids:
         #random width and height
-        w = random.randint(room_min_size,room_max_size_x)
-        h = random.randint(room_min_size,room_max_size_y)
+        w = random.randint(int(room_min_size),int(room_max_size_x))
+        h = random.randint(int(room_min_size),int(room_max_size_y))
         #random position without going out of the boundaries of the map
-        x = map_width_one_third*(i%3) + random.randint(1,map_width_one_third - w)
-        y = map_height_one_third*(i/3) + random.randint(1,map_height_one_third - h)
+        x = map_width_one_third*(i%3) + random.randint(1,int(map_width_one_third - w))
+        y = map_height_one_third*int(i/3) + random.randint(1,int(map_height_one_third - h))
         #"Rect" class makes rectangles easier to work with
         #finally, append the new room to the list
         rooms.append(Rect(x, y, w, h))
@@ -1112,7 +1113,7 @@ def make_map():
 
     #set traps
     if random.randint(0,9) < dungeon_level:
-        max_traps = min(10,random.randint(0,dungeon_level/4)+1)
+        max_traps = min(10,random.randint(0,int(dungeon_level/4))+1)
         #distribute the traps into the rooms
         i = 0
         while (i < max_traps):
@@ -1135,7 +1136,7 @@ def make_map():
         #distribute the items into the rooms
         i = 0
         while (i < max_items):
-            type = weighted_random_choice(item_dict.keys(),item_dict.values())
+            type = weighted_random_choice(list(item_dict.keys()),list(item_dict.values()))
             i += place_object(random.choice(not_gone_rooms),type)
 
     if not have_amulet() and dungeon_level >= AMULET_LEVEL:
@@ -1270,38 +1271,38 @@ trap_dict = OrderedDict([
 
 def create_object(type,x=0,y=0):
     if type == 'potion':
-        name = weighted_random_choice(potion_dict.keys(),[a.chance for a in potion_dict.values()])
+        name = weighted_random_choice(list(potion_dict.keys()),[a.chance for a in potion_dict.values()])
         return generate_potion(name,x,y)
     elif type == 'scroll':
-        name = weighted_random_choice(scroll_dict.keys(),[a.chance for a in scroll_dict.values()])
+        name = weighted_random_choice(list(scroll_dict.keys()),[a.chance for a in scroll_dict.values()])
         return generate_scroll(name,x,y)
     elif type == 'weapon':
-        name = random.choice(weapon_dict.keys())
+        name = random.choice(list(weapon_dict.keys()))
         if name == 'arrow':
             return [generate_weapon(name,x,y) for _ in range(random.randint(8,15))]
         return generate_weapon(name,x,y)
     elif type == 'armor':
-        name = weighted_random_choice(armor_dict.keys(),[a.chance for a in armor_dict.values()])
+        name = weighted_random_choice(list(armor_dict.keys()),[a.chance for a in armor_dict.values()])
         return generate_armor(name,x,y)
     elif type == 'food':
         return generate_food(x,y)
     elif type == 'ring':
-        name = weighted_random_choice(ring_dict.keys(),[a.chance for a in ring_dict.values()])
+        name = weighted_random_choice(list(ring_dict.keys()),[a.chance for a in ring_dict.values()])
         return generate_ring(name,x,y)
     elif type == 'stick':
-        name = weighted_random_choice(stick_dict.keys(),[a.chance for a in stick_dict.values()])
+        name = weighted_random_choice(list(stick_dict.keys()),[a.chance for a in stick_dict.values()])
         return generate_stick(name,x,y)
     elif type == 'amulet':
         return Object(x, y, ',', 'The Amulet of Yendor', color_amulet, type='amulet', item=Item())
     elif type == 'trap':
-        trap_type = weighted_random_choice(trap_dict.keys(),trap_dict.values())
+        trap_type = weighted_random_choice(list(trap_dict.keys()),list(trap_dict.values()))
         return Object(x, y, ' ', '', color_trap, type='trap',trap=Trap(trap_type))
     elif type == 'gold':
         return Object(x, y, '*', 'gold', color_gold, type='gold', gold=Gold())
 
 def get_random_pos(room):
-    x = random.randint(room.x1+1, room.x2-1)
-    y = random.randint(room.y1+1, room.y2-1)
+    x = random.randint(int(room.x1+1), int(room.x2-1))
+    y = random.randint(int(room.y1+1), int(room.y2-1))
     return x,y
 
 def place_object(room,type):
@@ -1558,7 +1559,7 @@ def use_scroll_genocide():
     monsters = ["'"+k + "' " + m.name for k,m in monster_dict.items()]
     index = menu(header, monsters, INVENTORY_WIDTH)
     if index:
-        ch = monster_dict.keys()[index]
+        ch = list(monster_dict.keys())[index]
         for o in [o for o in objects if o.ch == ch]:
             o.fighter.take_damage(9999,player)
 
@@ -1988,7 +1989,7 @@ magic_item_dict = {
 'stick':stick_dict,
 'ring':ring_dict}
 
-magic_types = magic_item_dict.keys()
+magic_types = list(magic_item_dict.keys())
 
 def generate_scroll(name,x=0,y=0):
     #name='monster confusion'#test
@@ -2181,7 +2182,7 @@ def generate_monster(ch,x=0,y=0):
     monster = monster_dict[ch]
     carry = None
     if random.random() < monster.carry:
-        carry = create_object(weighted_random_choice(item_dict.keys(),item_dict.values()))
+        carry = create_object(weighted_random_choice(list(item_dict.keys()),list(item_dict.values())))
     fighter = Fighter(hp=roll(str(monster.lvl)+'D8'), ac=monster.ac, st=10, 
                                 xp=monster.xp, lvl=monster.lvl, dmg=monster.dmg,
                                 actions=MonsterActions,
@@ -2258,7 +2259,7 @@ def render_bar(x, y, total_width, name, value, maximum, bar_color, back_color):
 
     #finally, some centered text with the values
     libtcod.console_set_default_foreground(panel, libtcod.white)
-    libtcod.console_print_ex(panel, x + total_width / 2, y, libtcod.BKGND_NONE, libtcod.CENTER,
+    libtcod.console_print_ex(panel, x + int(total_width / 2), y, libtcod.BKGND_NONE, libtcod.CENTER,
                                  name + ': ' + str(value) + '/' + str(maximum))
 
 def get_names_under_mouse():
@@ -2402,7 +2403,6 @@ def player_move_or_attack(dx, dy):
             player.move(dx, dy)
             fov_recompute = True
 
-
 def be_trapped(obj):
     global no_command
     obj.ch = '^'
@@ -2467,7 +2467,7 @@ def menu(header, options, width):
     #blit the contents of "window" to the root console
     x = SCREEN_WIDTH/2 - width/2
     y = SCREEN_HEIGHT/2 - height/2
-    libtcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
+    libtcod.console_blit(window, 0, 0, width, height, 0, int(x), int(y), 1.0, 0.7)
     #debug to ignore pressing shift,alt...
     while True:
         #present the root console to the player and wait for a key-press
@@ -2608,7 +2608,7 @@ def handle_keys():
     #(memo)On a key press, both KEY_CHAR event and KEY_TEXT event occure  
     #key_char = chr(key.c)
     if key.vk==libtcod.KEY_TEXT:
-        key_char = key.text[0]
+        key_char = chr(key.text[0])
     else:
         key_char = 0
 
@@ -3045,7 +3045,7 @@ def initialize_fov():
     fov_map = [[False for y in range(MAP_HEIGHT)] for x in range(MAP_WIDTH)]
 
     libtcod.console_clear(con)  #unexplored areas start black (which is the default background color)
-
+1
 def map_is_in_fov(x,y):
     return fov_map[x][y]
 
@@ -3053,7 +3053,7 @@ def neighborhood(x,y):
     return region(max(0,x-1),max(0,y-1),min(x+1,MAP_WIDTH-1),min(y+1,MAP_HEIGHT-1))
 
 def region(sx,sy,ex,ey):
-    return list(itertools.product(range(sx,ex+1),range(sy,ey+1)))
+    return list(itertools.product(range(int(sx),int(ex+1)),range(int(sy),int(ey+1))))
 
 def map_compute_fov(x,y):
     for i,j in region(0,0,MAP_WIDTH-1,MAP_HEIGHT-1):
@@ -3187,9 +3187,9 @@ def main_menu():
 
         #show the game's title, and some credits!
         libtcod.console_set_default_foreground(0, libtcod.light_yellow)
-        libtcod.console_print_ex(0, SCREEN_WIDTH/2, SCREEN_HEIGHT/2-4, libtcod.BKGND_NONE, libtcod.CENTER,
+        libtcod.console_print_ex(0, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2-4), libtcod.BKGND_NONE, libtcod.CENTER,
                                  'TOMBS OF THE ANCIENT KINGS')
-        libtcod.console_print_ex(0, SCREEN_WIDTH/2, SCREEN_HEIGHT-2, libtcod.BKGND_NONE, libtcod.CENTER, 'Revised by Yuggar')
+        libtcod.console_print_ex(0, int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT-2), libtcod.BKGND_NONE, libtcod.CENTER, 'Revised by Yuggar')
 
         #show options and wait for the player's choice
         choice = menu('', ['Play a new game', 'Continue last game', 'Quit'], 24)

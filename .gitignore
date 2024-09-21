@@ -1,4 +1,4 @@
-src/score
-src/savegame
-src/test_save_game
-
+score
+savegame
+test_save_game
+*~
