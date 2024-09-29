@@ -28,82 +28,71 @@ masahito3
 I want to follow the original tutorial's license, but I'm not sure what it is.
 If possible, I would like to use the MIT license.
 
-## Operations
+## Key bindings
 
 ↑ : move up
 ↓ : move down
 ← : move left
 → : move right
-keypad 8 : move up
-keypad 2 : move down
-keypad 4 : move left
-keypad 6 : move right
-keypad 7 : move up left
-HOME     : move up left
-
-
-libtcod.KEY_UP:(0,-1),
-libtcod.KEY_KP8:(0,-1),
-libtcod.KEY_DOWN:(0,1),
-libtcod.KEY_KP2:(0,1),
-libtcod.KEY_LEFT:(-1,0),
-libtcod.KEY_KP4:(-1,0),
-libtcod.KEY_RIGHT:(1,0),
-libtcod.KEY_KP6:(1,0),
-libtcod.KEY_HOME:(-1,-1),
-libtcod.KEY_KP7:(-1,-1),
-libtcod.KEY_PAGEUP:(1,-1),
-libtcod.KEY_KP9:(1,-1),
-libtcod.KEY_END:(-1,1),
-libtcod.KEY_KP1:(-1,1),
-libtcod.KEY_PAGEDOWN:(1,1),
-libtcod.KEY_KP3:(1,1),
-libtcod.KEY_SPACE:(0,0),
-libtcod.KEY_KP5:(0,0),
-'y':(-1,-1),
-'k':(0,-1),
-'u':(1,-1),
-'h':(-1,0),
-'l':(1,0),
-'b':(-1,1),
-'j':(0,1),
-'n':(1,1)
-
-
-
-g : pick up an item from the f
-loor
-s : search the room tiles and walls neighbering the player
+KEYPAD8 : move up
+KEYPAD2 : move down
+KEYPAD4 : move left
+KEYPAD6 : move right
+KEYPAD7 : move up left
+KEYPAD9 : move right up
+KEYPAD1 : move left down
+KEYPAD3 : move right down
+KEYPAD5 : not move
+SPACE   : not move
+HOME    : move up left
+END     : move left down
+PAGEUP  : move right up
+PAGEDOWN : move right down
+y : move left up
+k : move up
+u : move right up
+h : move left
+l : move right
+b : move left down
+j : move down
+n : move right down
+g : pick up an item from the floor
+s : search nearby tiles and walls
 i : show inventory menu
-  on the inventory menu
-  a..z : press an alphabet before the item name you want to use
-  ESC : cancel
 d : show drop menu 
-  on the drop menu
-  a..z : press an alphabet before the item name you want to drop
-  ESC : cancel
-c : show the player's information
-t : show the weapon menu to throw a weapon
-  on the weapon menu
-  a..z : press an alphabet before the item name you want to throw
-  ↑ : throw up
-  ↓ : throw down
-  → : throw right
-  ← : throw left
-  ESC : cancel
+c : show player's status
+t : show weapons to be thrown
 > : go up stairs
 < : go down stairs
 
-
-### throw weapons
-t
-
-
-
-
 ## Monsters
 
-
+A : giant ant
+B : bat
+C : centaur
+D : dragon
+E : floating eye
+F : violet fungi
+G : gnome
+H : hobgoblin
+I : invisible stalker
+J : jackal
+K : kobold
+L : leprechaun
+M : mimic
+N : nymph
+O : orc
+P : purple worm
+Q : quasit
+R : rust monster
+S : snake
+T : troll
+U : umber hulk
+V : vampire
+W : wraith
+X : xorn
+Y : yeti
+Z : zombie
 
 ## Traps
 
