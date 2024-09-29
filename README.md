@@ -1,9 +1,9 @@
-# roguelike
+# A roguelike game
 
 ## Overview
 
 This is a roguelike game that is based on 'Complete Roguelike Tutorial' in RogueBasin.
-Many rules, items and monsters that are taken from the rogue version 3.1 have been incorporated. 
+Many rules, items, monsters and more that are taken from the rogue version 3.1 have been incorporated. 
 
 ## Requirement
 
@@ -27,6 +27,28 @@ masahito3
 
 I want to follow the original tutorial's license, but I'm not sure what it is.
 If possible, I would like to use the MIT license.
+
+## what is on the screen
+
+@ : the player
+? : scroll
+* : gold
+^ : trap
+: : food
+
+dark tile : pass or room
+bright tile : wall
+
+
+## status on the screen
+HP : Hit Points
+STR : Strength bigger is better
+AC : Armor Class less is better
+LVL : Level
+EXP : Experience
+Gold : sum of gold you have
+Dungeon level : floor level in the dungeon
+
 
 ## Key bindings
 
@@ -58,10 +80,10 @@ j : move down
 n : move right down  
 g : pick up an item from the floor  
 s : search nearby tiles and walls  
-i : show inventory menu  
-d : show drop menu  
-c : show player's status  
-t : show weapons to be thrown  
+i : open inventory  
+d : open item drop menu  
+c : open player's status  
+t : open throw weapon menu  
 \> : go up stairs  
 \< : go down stairs  
 
@@ -101,4 +123,24 @@ Z : zombie
 ## Armors
 
 
+## Weapons
+
+
+## Wands and Sticks
+
+
 ## Rings
+
+
+
+## Scrolls
+
+
+
+## Potions
+
+
+
+
+
+
