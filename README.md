@@ -2,8 +2,8 @@
 
 ## Overview
 
-This is a roguelike game based on 'Complete Roguelike Tutorial' in RogueBasin.
-And the rules, items and monsters are inspired from the rogue version 3.1. 
+This is a roguelike game that is based on 'Complete Roguelike Tutorial' in RogueBasin.
+Many rules, items and monsters that are taken from the rogue version 3.1 have been incorporated. 
 
 ## Requirement
 
@@ -62,8 +62,8 @@ i : show inventory menu
 d : show drop menu  
 c : show player's status  
 t : show weapons to be thrown  
-> : go up stairs  
-< : go down stairs  
+\> : go up stairs  
+\< : go down stairs  
 
 ## Monsters
 
@@ -101,3 +101,4 @@ Z : zombie
 ## Armors
 
 
+## Rings
