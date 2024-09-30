@@ -32,7 +32,7 @@ If possible, I would like to use the MIT license.
 
 @ : the player  
 : : food
-* : gold  
+\* : gold  
 ^ : trap  
 ) : weapon  
 ] : armor  
@@ -155,32 +155,57 @@ crossbow
 crossbow bolt  
 spear  
 
-## Wands and Staffs and Sticks
+## Sticks
 
+light
+striking
+lightning
+fire
+cold
+polymorph
+magic missile
+haste monster
+slow monster
+drain life
+nothing
+teleport away
+teleport to
+cancellation
 
 ## Rings
 
-
+protection  
+add strength  
+sustain strength  
+searching  
+see invisible  
+adornment  
+aggravate monster  
+dexterity  
+increase damage  
+regeneration  
+slow digestion  
+teleportation  
+stealth  
 
 ## Scrolls
 
-['monster confusion',0.08,170,use_scroll_confuse],
-['magic mapping',0.05,180,use_scroll_map],
-['light',0.10,100,use_scroll_light],
-['hold monster',0.02,200,use_scroll_hold],
-['sleep',0.05,50,use_scroll_sleep],
-['enchant armor',0.08,130,use_scroll_armor],
-['identify',0.21,100,use_scroll_ident],
-['scare monster',0.04,180,use_scroll_scare],
-['gold detection',0.04,110,use_scroll_gfind],
-['teleportation',0.07,175,use_scroll_telep],
-['enchant weapon',0.10,150,use_scroll_weapon],
-['create monster',0.05,75,use_scroll_create],
-['remove curse',0.08,105,use_scroll_remove],
-['aggravate monsters',0.01,60,use_scroll_aggr],
-['blank paper',0.01,50,use_scroll_nop],
-['genocide',0.01,200,use_scroll_genocide]]])
-
+monster confusion  
+magic mapping  
+light  
+hold monster  
+sleep  
+enchant armor  
+identify  
+scare monster  
+gold detection  
+teleportation  
+enchant weapon  
+create monster  
+remove curse  
+aggravate monsters  
+blank paper  
+genocide  
 
 ## Potions
 
