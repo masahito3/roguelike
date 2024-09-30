@@ -28,7 +28,7 @@ masahito3
 I want to follow the original tutorial's license, but I'm not sure what it is.
 If possible, I would like to use the MIT license.
 
-## what is on the screen
+## What is on the screen
 
 @ : the player  
 : : food  
@@ -39,12 +39,12 @@ If possible, I would like to use the MIT license.
 = : ring  
 / : wand  
 ? : scroll  
-! : potion
+! : potion  
 , : amulet  
 dark tile : passage or room  
 bright tile : wall   
 
-## status display
+## Status display
 
 HP : Hit Points  
 STR : Strength the greater, the better  
