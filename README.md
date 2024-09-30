@@ -155,7 +155,7 @@ crossbow
 crossbow bolt  
 spear  
 
-## Sticks
+## Wands
 
 light  
 striking  
