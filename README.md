@@ -33,13 +33,13 @@ If possible, I would like to use the MIT license.
 @ : the player  
 : : food  
 \* : gold  
-^ : trap  
 ) : weapon  
 ] : armor  
 = : ring  
 / : wand  
 ? : scroll  
 ! : potion  
+^ : trap  
 , : amulet  
 dark tile : passage or room  
 bright tile : wall   
