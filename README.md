@@ -37,7 +37,7 @@ If possible, I would like to use the MIT license.
 ) : weapon  
 ] : armor  
 = : ring  
-/ : wand or stick  
+/ : wand  
 ? : scroll  
 ! : potion
 , : amulet  
@@ -157,20 +157,20 @@ spear
 
 ## Sticks
 
-light
-striking
-lightning
-fire
-cold
-polymorph
-magic missile
-haste monster
-slow monster
-drain life
-nothing
-teleport away
-teleport to
-cancellation
+light  
+striking  
+lightning  
+fire  
+cold  
+polymorph  
+magic missile  
+haste monster  
+slow monster  
+drain life  
+nothing  
+teleport away  
+teleport to  
+cancellation  
 
 ## Rings
 
@@ -223,8 +223,3 @@ haste self
 restore strength  
 blindness  
 thirst quenching  
-
-
-
-
-
