@@ -120,15 +120,6 @@ X : xorn
 Y : yeti  
 Z : zombie  
 
-## Traps
-
-trap door  
-arrow trap  
-sleeping gas trap  
-beartrap  
-teleport trap  
-dart trap  
-
 ## Armors
 
 leather armor  
@@ -223,3 +214,13 @@ haste self
 restore strength  
 blindness  
 thirst quenching  
+
+## Traps
+
+trap door  
+arrow trap  
+sleeping gas trap  
+beartrap  
+teleport trap  
+dart trap  
+
