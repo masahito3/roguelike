@@ -31,7 +31,7 @@ If possible, I would like to use the MIT license.
 ## what is on the screen
 
 @ : the player  
-: : food
+: : food  
 \* : gold  
 ^ : trap  
 ) : weapon  
