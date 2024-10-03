@@ -1479,7 +1479,7 @@ def use_scroll_armor():
     message('Your armor glows faintly for a moment.', color_scroll)
 
 def use_scroll_ident():
-    message('Select an item you would like to identify.', color_scroll)
+    message('Select an item you want to identify.', color_scroll)
     draw_gui() #show the message
     clear_menu() #clear previous menu
     chosen_item = inventory_menu('Press the key next to an item to identify, or any other to cancel.\n')
@@ -2975,7 +2975,7 @@ def new_game():
     #    obj.always_visible = True
 
     #test scroll
-    #obj = generate_scroll('monster confusion')
+    #obj = generate_scroll('identify')
     #inventory.append(obj)
     #obj.always_visible = True
 
