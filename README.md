@@ -43,7 +43,8 @@ If possible, I would like to use the MIT license.
 ! : potion  
 ^ : trap  
 , : amulet  
-% : stairs  
+% : stairs
+A-Z : monsters  
 dark tile : passage or room  
 bright tile : wall  
 
