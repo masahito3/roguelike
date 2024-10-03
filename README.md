@@ -16,8 +16,8 @@ python3 ./roguelike.py
 ## Reference
 
 [Complete Roguelike Tutorial in RogueBasin](https://www.roguebasin.com/index.php/Complete_Roguelike_Tutorial,_using_python%2Blibtcod)  
-[https://github.com/libtcod/libtcod/tree/1.6.0](libtcod 1.6.0)  
-[https://britzl.github.io/roguearchive](rogue 3.6.2)  
+[libtcod 1.6.0](https://github.com/libtcod/libtcod/tree/1.6.0)  
+[rogue 3.6.2](https://britzl.github.io/roguearchive)  
 
 ## Author
 
