@@ -86,7 +86,7 @@ b : move left down
 j : move down  
 n : move right down  
 g : pick up an item from the floor  
-s : search nearby tiles and walls  
+s : search for nearby tiles and walls  
 i : open inventory  
 d : open item drop menu  
 c : open player's status  
