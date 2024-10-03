@@ -5,6 +5,8 @@
 This is a roguelike game that is based on 'Complete Roguelike Tutorial' from RogueBasin.
 Many rules, items, monsters, and other elements taken from rogue 3.6.2 in The Rogue Archive have been incorporated. 
 
+![image](sample.png)  
+
 ## Requirement
 
 This program runs only on Python 3 and Linux.
