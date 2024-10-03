@@ -40,10 +40,10 @@ If possible, I would like to use the MIT license.
 ? : scroll  
 ! : potion  
 ^ : trap  
-, : amulet
-% : stairs
+, : amulet  
+% : stairs  
 dark tile : passage or room  
-bright tile : wall   
+bright tile : wall  
 
 ## Status display
 
