@@ -2,8 +2,8 @@
 
 ## Overview
 
-This is a roguelike game that is based on 'Complete Roguelike Tutorial' in RogueBasin.
-Many rules, items, monsters, and more that are taken from rogue 3.6.2 in 'The Rogue Archive' have been incorporated. 
+This is a roguelike game that is based on 'Complete Roguelike Tutorial' from RogueBasin.
+Many rules, items, monsters, and other elements taken from rogue 3.6.2 in The Rogue Archive have been incorporated. 
 
 ## Requirement
 
@@ -40,7 +40,8 @@ If possible, I would like to use the MIT license.
 ? : scroll  
 ! : potion  
 ^ : trap  
-, : amulet  
+, : amulet
+% : stairs
 dark tile : passage or room  
 bright tile : wall   
 
