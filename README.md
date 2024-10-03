@@ -3,7 +3,7 @@
 ## Overview
 
 This is a roguelike game that is based on 'Complete Roguelike Tutorial' in RogueBasin.
-Many rules, items, monsters, and more that are taken from rogue version 3.1 have been incorporated. 
+Many rules, items, monsters, and more that are taken from rogue 3.6.2 in 'The Rogue Archive' have been incorporated. 
 
 ## Requirement
 
@@ -16,8 +16,8 @@ python3 ./roguelike.py
 ## Reference
 
 [Complete Roguelike Tutorial in RogueBasin](https://www.roguebasin.com/index.php/Complete_Roguelike_Tutorial,_using_python%2Blibtcod)  
-libtcod  
-rogue version 3.1  
+[https://github.com/libtcod/libtcod/tree/1.6.0](libtcod 1.6.0)  
+[https://britzl.github.io/roguearchive](rogue 3.6.2)  
 
 ## Author
 
