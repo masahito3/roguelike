@@ -1542,6 +1542,8 @@ def use_scroll_remove():
     weapon = get_current_weapon()
     if weapon:
         weapon.cursed = False
+    for r in get_current_rings():
+        r.cursed = False
     message('You feel as if somebody is watching over you.', color_scroll)
 
 def use_scroll_aggr():
@@ -2975,19 +2977,17 @@ def new_game():
     #    obj.always_visible = True
 
     #test scroll
-    #obj = generate_scroll('identify')
+    #obj = generate_scroll('remove curse')
     #inventory.append(obj)
     #obj.always_visible = True
 
     #test ring
-    ##ring_name = 'sustain strength'
     #ring_name = 'searching'
-    ##ring_name = 'regeneration'
-    ##ring_name = 'slow digestion'
     #obj = generate_ring(ring_name)
     #inventory.append(obj)
-    ##obj.equipment.equip()
+    ###obj.equipment.equip()
     #obj.always_visible = True
+    #obj.equipment.cursed = True
 
     #test stick
     ##obj = generate_stick('lightning')
