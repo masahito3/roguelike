@@ -2083,7 +2083,7 @@ def special_attack_giant_ant(monster):
     if next((r for r in get_current_rings() if r.owner.name == 'sustain strength'),None):
         message('A sting momentarily weakens you.',color_monster)
         return
-    player.fighter.st = max(0,player.fighter.st - 1)
+    player.fighter.st = max(3,player.fighter.st - 1)
     message('You feel a sting in your arm and now feel weaker.',color_monster)
 
 def special_attack_wraith(monster):
