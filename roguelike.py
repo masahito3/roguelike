@@ -2170,7 +2170,7 @@ monster_dict = OrderedDict([(i[0],MonsterInfo(*i[1:])) for i in [
 ['U','umber hulk',130,8,2,'3D4/3D4/2D5',0.4,MeanMonster,noop],
 ['V','vampire',380,8,1,'1D10',0.2,MeanMonster,noop],
 ['W','wraith',55,5,4,'1D6',0,BasicMonster,special_attack_wraith],
-['X','xorn',120,7,-2,'1D3/1D3/1D3/4d6',0,MeanMonster,noop],
+['X','xorn',120,7,-2,'1D3/1D3/1D3/4D6',0,MeanMonster,noop],
 ['Y','yeti',50,4,6,'1D6/1D6',0.3,BasicMonster,noop],
 ['Z','zombie',7,2,8,'1D8',0,MeanMonster,noop]]])
 
