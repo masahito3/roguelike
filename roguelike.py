@@ -2772,7 +2772,7 @@ def target_direction():
         #to show the name of the object under the mouse.
         render_all()
 
-        key_char = (key.vk==libtcod.KEY_TEXT and key.text[0]) or 0
+        key_char = (key.vk==libtcod.KEY_TEXT and chr(key.text[0])) or 0
         delta_xy = delta_xy_dict.get(key.vk,None) or delta_xy_dict.get(key_char,None)
 
         if delta_xy:
