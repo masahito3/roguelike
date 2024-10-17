@@ -64,27 +64,27 @@ Dungeon level : The floor level within the dungeon
 ↓ : move down  
 ← : move left  
 → : move right  
+HOME    : move left up  
+PAGEUP  : move right up  
+END     : move left down  
+PAGEDOWN : move right down  
 KEYPAD8 : move up  
 KEYPAD2 : move down  
 KEYPAD4 : move left  
 KEYPAD6 : move right  
-KEYPAD7 : move up left  
+KEYPAD7 : move left up  
 KEYPAD9 : move right up  
 KEYPAD1 : move left down  
 KEYPAD3 : move right down  
 KEYPAD5 : not move  
 SPACE   : not move  
-HOME    : move up left  
-END     : move left down  
-PAGEUP  : move right up  
-PAGEDOWN : move right down  
-y : move left up  
-k : move up  
-u : move right up  
 h : move left  
-l : move right  
-b : move left down  
 j : move down  
+k : move up  
+l : move right  
+y : move left up  
+u : move right up  
+b : move left down  
 n : move right down  
 g : pick up an item from the floor  
 s : search for nearby tiles and walls  
