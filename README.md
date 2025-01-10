@@ -228,3 +228,7 @@ beartrap
 teleport trap  
 dart trap  
 
+## Disclaimer
+
+This software is provided 'as is' without any express or implied warranties, including but not limited to warranties of merchantability or fitness for a particular purpose. The user accepts full responsibility for any damages, losses or liabilities resulting from its use.
+
